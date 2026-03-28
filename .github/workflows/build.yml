@@ -32,6 +32,10 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        cache: 'gradle'
+        
+    - name: Verify Java Version
+      run: java -version
         
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
@@ -79,6 +83,10 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        cache: 'gradle'
+        
+    - name: Verify Java Version
+      run: java -version
         
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
