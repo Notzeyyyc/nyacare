@@ -5,9 +5,8 @@ node_modules/
 
 # Build outputs
 dist/
-www/
-!www/index.html
-!www/js/
+# Keep www folder for Capacitor
+# www/
 
 # Android
 android/.gradle/

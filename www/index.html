@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>NyaCare Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+        header {
+            text-align: center;
+            padding: 30px 0 20px;
+            margin-bottom: 20px;
+        }
+        .logo {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            border-radius: 20px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3);
+        }
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #fff, #e94560);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .subtitle {
+            color: #8892b0;
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+        .section-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #e94560;
+            margin: 25px 0 12px;
+            padding-left: 4px;
+            font-weight: 600;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        .active-char-card {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.2), rgba(255, 107, 107, 0.1));
+            border: 1px solid rgba(233, 69, 96, 0.3);
+        }
+        .active-char-display {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .active-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e94560, #533483);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+        .active-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+        .active-info p {
+            color: #8892b0;
+            font-size: 0.85rem;
+        }
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        @media (min-width: 400px) {
+            .character-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        .character-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.25s ease;
+        }
+        .character-card:active {
+            transform: scale(0.95);
+        }
+        .character-card:hover, .character-card.active {
+            background: rgba(233, 69, 96, 0.15);
+            border-color: #e94560;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(233, 69, 96, 0.2);
+        }
+        .character-avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #533483, #e94560);
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 15px rgba(83, 52, 131, 0.3);
+        }
+        .character-name {
+            font-weight: 600;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .details-list {
+            margin-top: 15px;
+        }
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        .detail-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(233, 69, 96, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            margin-right: 12px;
+        }
+        .detail-label {
+            color: #8892b0;
+            font-size: 0.9rem;
+        }
+        .detail-value {
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: right;
+            flex: 1;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: #8892b0;
+            font-weight: 500;
+        }
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #e94560;
+            background: rgba(255, 255, 255, 0.12);
+        }
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .btn:active {
+            transform: scale(0.98);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            color: #fff;
+            box-shadow: 0 8px 25px rgba(233, 69, 96, 0.35);
+        }
+        .btn-primary:hover {
+            box-shadow: 0 12px 35px rgba(233, 69, 96, 0.45);
+            transform: translateY(-2px);
+        }
+        .status {
+            padding: 14px;
+            border-radius: 12px;
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+            font-weight: 500;
+        }
+        .status.success {
+            background: rgba(78, 205, 196, 0.15);
+            color: #4ecdc4;
+            border: 1px solid rgba(78, 205, 196, 0.3);
+            display: block;
+        }
+        .status.error {
+            background: rgba(233, 69, 96, 0.15);
+            color: #e94560;
+            border: 1px solid rgba(233, 69, 96, 0.3);
+            display: block;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8892b0;
+        }
+        .app-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .app-info h4 {
+            font-size: 0.95rem;
+            margin-bottom: 3px;
+        }
+        .app-info p {
+            font-size: 0.75rem;
+            color: #8892b0;
+        }
+        .app-delete {
+            background: rgba(233, 69, 96, 0.2);
+            border: none;
+            color: #e94560;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            margin-top: 10px;
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 20px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-header h3 {
+            font-size: 1.2rem;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: #8892b0;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        textarea {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #e94560;
+            background: rgba(255, 255, 255, 0.12);
+        }
+        .help-text {
+            font-size: 0.75rem;
+            color: #667eea;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🐱</div>
+            <h1>NyaCare</h1>
+            <p class="subtitle">Your AI Companion</p>
+        </header>
+
+        <p class="section-title">Current Companion</p>
+        <div class="card active-char-card">
+            <div class="active-char-display">
+                <div class="active-avatar" id="activeAvatar">?</div>
+                <div class="active-info">
+                    <h3 id="activeName">No Character Selected</h3>
+                    <p id="activeDesc">Choose a character below</p>
+                </div>
+            </div>
+        </div>
+
+        <p class="section-title">Choose Character</p>
+        <div class="card">
+            <div id="characterList" class="character-grid">
+                <div class="empty-state">
+                    <div class="empty-state-icon">⏳</div>
+                    <div>Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <p class="section-title">Character Info</p>
+        <div class="card">
+            <div id="characterDetails">
+                <div class="empty-state">
+                    <div class="empty-state-icon">👤</div>
+                    <div>Select a character to view details</div>
+                </div>
+            </div>
+        </div>
+
+        <p class="section-title">Settings</p>
+        <div class="card">
+            <form id="configForm">
+                <div class="row">
+                    <div class="form-group">
+                        <label>Cooldown (min)</label>
+                        <input type="number" id="cooldownMinutes" value="10" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Quiet Start</label>
+                        <input type="number" id="quietStart" value="22" min="0" max="23">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Quiet End</label>
+                        <input type="number" id="quietEnd" value="6" min="0" max="23">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Settings</button>
+            </form>
+            <div id="status" class="status"></div>
+        </div>
+
+        <p class="section-title">Monitored Apps</p>
+        <div class="card">
+            <div id="appsList">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📱</div>
+                    <div>Loading apps...</div>
+                </div>
+            </div>
+            <button class="btn btn-secondary" id="addAppBtn">+ Add App</button>
+        </div>
+    </div>
+
+    <!-- Add App Modal -->
+    <div class="modal" id="addAppModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add App to Monitor</h3>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <form id="addAppForm">
+                <div class="form-group">
+                    <label>Package Name</label>
+                    <input type="text" id="appPackage" placeholder="com.example.app" required>
+                    <p class="help-text">e.g., com.instagram.android</p>
+                </div>
+                <div class="form-group">
+                    <label>App Name</label>
+                    <input type="text" id="appName" placeholder="Instagram" required>
+                </div>
+                <div class="form-group">
+                    <label>Context</label>
+                    <input type="text" id="appContext" placeholder="browsing social media">
+                </div>
+                <div class="form-group">
+                    <label>AI Prompt</label>
+                    <textarea id="appPrompt" placeholder="The user just opened [App]. Generate a short, friendly notification...">The user just opened this app. Generate a short, casual notification (max 100 chars) from an AI companion. Be playful and use emojis.</textarea>
+                    <p class="help-text">This tells the AI how to respond when this app opens</p>
+                </div>
+                <button type="submit" class="btn btn-primary">Add App</button>
+            </form>
+            <div id="addAppStatus" class="status"></div>
+        </div>
+    </div>
+
+    <script type="module" src="./js/dashboard.js"></script>
+</body>
+</html>
