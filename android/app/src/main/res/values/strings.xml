@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">NyaCare</string>
+    <string name="title_activity_main">NyaCare</string>
+    <string name="package_name">com.zyx.nyacare</string>
+    <string name="custom_url_scheme">com.zyx.nyacare</string>
+</resources>

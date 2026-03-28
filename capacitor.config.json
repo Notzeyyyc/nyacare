@@ -1,0 +1,10 @@
+{
+  "appId": "com.zyx.nyacare",
+  "appName": "NyaCare",
+  "webDir": "www",
+  "plugins": {
+    "Preferences": {
+      "group": "nyacare"
+    }
+  }
+}
